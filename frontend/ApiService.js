@@ -1,4 +1,4 @@
-import api, { endpoints } from '../config/api';
+import api, { endpoints } from './Api';
 
 // ==================== AUTH SERVICES ====================
 export const authService = {
