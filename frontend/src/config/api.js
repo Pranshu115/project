@@ -1,5 +1,5 @@
-// API Base URL - using deployed backend
-export const API_BASE_URL = 'https://tatvadirect.onrender.com';
+// API Base URL - using deployed backend on Render
+export const API_BASE_URL = 'https://tatva-72l6.onrender.com';
 
 // Helper function to create full API URL
 export const getApiUrl = (endpoint) => {

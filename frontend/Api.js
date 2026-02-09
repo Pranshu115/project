@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// API Base URL - using deployed backend
-const API_BASE_URL = 'https://tatvadirect.onrender.com';
+// API Base URL - using deployed backend on Render
+const API_BASE_URL = 'https://tatva-72l6.onrender.com';
 
 // Create axios instance with default config
 const api = axios.create({
