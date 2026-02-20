@@ -59,18 +59,31 @@ const corsOptions = {
     }
     
     // In production, check against allowed origins
+    const defaultOrigins = [
+      'https://tatvadirect.onrender.com',
+      'https://tatva-direct.vercel.app',
+      'https://tatva-direct.netlify.app'
+    ];
+    
     const allowedOrigins = process.env.ALLOWED_ORIGINS 
       ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
-      : [
-          'https://tatvadirect.onrender.com',
-          'https://tatva-direct.vercel.app',
-          'https://tatva-direct.netlify.app'
-        ];
+      : defaultOrigins;
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Log CORS check for debugging
+    console.log(`🌐 CORS check - Origin: ${origin}`);
+    console.log(`🌐 Allowed origins:`, allowedOrigins);
+    
+    // Allow if origin matches or if it's a Vercel domain (wildcard for *.vercel.app)
+    const isAllowed = allowedOrigins.indexOf(origin) !== -1 || 
+                      origin.includes('.vercel.app') ||
+                      origin.includes('localhost');
+    
+    if (isAllowed) {
+      console.log(`✅ CORS allowed for: ${origin}`);
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.log(`❌ CORS blocked for: ${origin}`);
+      callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
     }
   },
   credentials: true,
