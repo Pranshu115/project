@@ -180,12 +180,28 @@ const generateAdminData = async () => {
     // Get all BOQs without populating
     const boqs = await BOQ.find();
     
-    // Get all orders with full population
+    // Get all orders with full population - ensure all fields are populated
     const orders = await Order.find()
-      .populate('items.product', 'name category')
-      .populate('serviceProvider', 'name company email')
-      .populate('supplier', 'name company email')
-      .populate('boq', 'name description');
+      .populate({
+        path: 'items.product',
+        select: 'name category',
+        model: 'Product'
+      })
+      .populate({
+        path: 'serviceProvider',
+        select: 'name company email',
+        model: 'User'
+      })
+      .populate({
+        path: 'supplier',
+        select: 'name company email',
+        model: 'User'
+      })
+      .populate({
+        path: 'boq',
+        select: 'name description',
+        model: 'BOQ'
+      });
 
     // Generate supplier data with their products and orders
     const supplierData = await Promise.all(suppliers.map(async (supplier) => {
@@ -362,7 +378,66 @@ const generateAdminData = async () => {
     });
 
     // Generate transactions from actual orders with populated information
-    const transactions = orders.map(order => {
+    const transactions = await Promise.all(orders.map(async (order) => {
+      // Ensure order is a Mongoose document for proper population
+      const orderDoc = order.toObject ? order.toObject() : order;
+      
+      // If serviceProvider or supplier are ObjectIds, populate them manually
+      let serviceProviderData = null;
+      let supplierData = null;
+      
+      if (order.serviceProvider) {
+        if (typeof order.serviceProvider === 'object' && order.serviceProvider.name) {
+          // Already populated
+          serviceProviderData = {
+            name: order.serviceProvider.name,
+            company: order.serviceProvider.company || '',
+            email: order.serviceProvider.email || ''
+          };
+        } else {
+          // Need to populate manually
+          try {
+            const spId = order.serviceProvider.toString ? order.serviceProvider.toString() : order.serviceProvider;
+            const sp = await User.findById(spId).select('name company email').lean();
+            if (sp) {
+              serviceProviderData = {
+                name: sp.name || '',
+                company: sp.company || '',
+                email: sp.email || ''
+              };
+            }
+          } catch (err) {
+            console.error(`Error populating serviceProvider for order ${order.orderNumber}:`, err);
+          }
+        }
+      }
+      
+      if (order.supplier) {
+        if (typeof order.supplier === 'object' && order.supplier.name) {
+          // Already populated
+          supplierData = {
+            name: order.supplier.name,
+            company: order.supplier.company || '',
+            email: order.supplier.email || ''
+          };
+        } else {
+          // Need to populate manually
+          try {
+            const supId = order.supplier.toString ? order.supplier.toString() : order.supplier;
+            const sup = await User.findById(supId).select('name company email').lean();
+            if (sup) {
+              supplierData = {
+                name: sup.name || '',
+                company: sup.company || '',
+                email: sup.email || ''
+              };
+            }
+          } catch (err) {
+            console.error(`Error populating supplier for order ${order.orderNumber}:`, err);
+          }
+        }
+      }
+      
       const itemCount = order.items ? order.items.length : 0;
       const productNames = order.items && order.items.length > 0
         ? order.items.slice(0, 3).map(item => {
@@ -370,43 +445,39 @@ const generateAdminData = async () => {
             if (item.product && typeof item.product === 'object') {
               return item.product.name || 'Product';
             }
+            // If product is an ObjectId, try to fetch it
+            if (item.product && item.product.toString) {
+              return 'Product'; // Will be handled below if needed
+            }
             return 'Product';
           }).join(', ') + (itemCount > 3 ? ` +${itemCount - 3} more` : '')
         : 'No items';
       
       return {
-        id: order.orderNumber || order._id,
-        orderId: order._id,
+        id: order.orderNumber || order._id.toString(),
+        orderId: order._id.toString(),
         type: 'order',
-        serviceProvider: order.serviceProvider ? {
-          name: order.serviceProvider.name,
-          company: order.serviceProvider.company,
-          email: order.serviceProvider.email
-        } : null,
-        supplier: order.supplier ? {
-          name: order.supplier.name,
-          company: order.supplier.company,
-          email: order.supplier.email
-        } : null,
+        serviceProvider: serviceProviderData,
+        supplier: supplierData,
         boq: order.boq ? {
-          name: order.boq.name,
-          description: order.boq.description
+          name: order.boq.name || '',
+          description: order.boq.description || ''
         } : null,
-        amount: order.totalAmount,
-        date: order.createdAt.toISOString().split('T')[0],
-        createdAt: order.createdAt,
-        status: order.status,
-        paymentStatus: order.paymentStatus,
+        amount: order.totalAmount || 0,
+        date: order.createdAt ? order.createdAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        createdAt: order.createdAt || new Date(),
+        status: order.status || 'pending',
+        paymentStatus: order.paymentStatus || 'pending',
         products: productNames,
         productCount: itemCount,
         items: order.items?.map(item => ({
-          product: item.product?.name || 'Product',
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          totalPrice: item.totalPrice
+          product: item.product?.name || (item.product && typeof item.product === 'object' ? 'Product' : 'Product'),
+          quantity: item.quantity || 0,
+          unitPrice: item.unitPrice || 0,
+          totalPrice: item.totalPrice || 0
         })) || []
       };
-    });
+    }));
 
     // Sort transactions by date (newest first)
     transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
