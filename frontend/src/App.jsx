@@ -22,6 +22,7 @@ import BOQNormalize from './pages/BOQNormalize';
 import VendorSelect from './pages/VendorSelect';
 import Substitution from './pages/Substitution';
 import CreatePO from './pages/CreatePO';
+import { getApiUrl } from './config/api';
 
 function App() {
   const [normalizedItems, setNormalizedItems] = useState([]);
@@ -83,7 +84,6 @@ function App() {
 
   const checkSupplierSetupStatus = async (token) => {
     try {
-      const { getApiUrl } = await import('./config/api');
       const response = await fetch(getApiUrl('/api/supplier/setup-status'), {
         headers: {
           'Authorization': `Bearer ${token}`

@@ -1,6 +1,17 @@
 // API Base URL - uses environment variable in production, falls back to hardcoded URL
 // In Vercel, set VITE_API_BASE_URL environment variable to your Render backend URL
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://tatvadirect.onrender.com';
+const envApiUrl = import.meta.env.VITE_API_BASE_URL;
+export const API_BASE_URL = envApiUrl && envApiUrl.trim() !== '' 
+  ? envApiUrl.trim().replace(/\/$/, '') // Remove trailing slash if present
+  : 'https://tatvadirect.onrender.com';
+
+// Log for debugging (only in development)
+if (import.meta.env.DEV) {
+  console.log('API Configuration:', {
+    envVar: import.meta.env.VITE_API_BASE_URL,
+    finalUrl: API_BASE_URL
+  });
+}
 
 // Helper function to create full API URL
 export const getApiUrl = (endpoint) => {
