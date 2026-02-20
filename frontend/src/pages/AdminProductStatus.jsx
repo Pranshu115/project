@@ -175,7 +175,7 @@ const AdminProductStatus = ({ user }) => {
     try {
       const token = localStorage.getItem('token');
       const productId = product._id || product.id;
-      const response = await fetch(`/api/admin/products/${productId}/approve`, {
+      const response = await fetch(getApiUrl(`/api/admin/products/${productId}/approve`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -212,7 +212,7 @@ const AdminProductStatus = ({ user }) => {
     try {
       const token = localStorage.getItem('token');
       const productId = product._id || product.id;
-      const response = await fetch(`/api/admin/products/${productId}/reject`, {
+      const response = await fetch(getApiUrl(`/api/admin/products/${productId}/reject`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -254,7 +254,7 @@ const AdminProductStatus = ({ user }) => {
     try {
       const token = localStorage.getItem('token');
       const productId = product._id || product.id;
-      const response = await fetch(`/api/admin/products/${productId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/products/${productId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -699,7 +699,7 @@ const ProductDetailModal = ({ product, onClose, onApprove, onReject, onDelete, o
       console.log('💾 [ADMIN SAVE] After cleanup - Specs keys count:', Object.keys(productData.specifications || {}).length);
       console.log('💾 [ADMIN SAVE] After cleanup - Specs:', productData.specifications);
       
-      const response = await fetch(`/api/admin/products/${productId}`, {
+      const response = await fetch(getApiUrl(`/api/admin/products/${productId}`), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
