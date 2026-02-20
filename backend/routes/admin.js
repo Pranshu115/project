@@ -379,25 +379,20 @@ const generateAdminData = async () => {
 
     // Generate transactions from actual orders with populated information
     const transactions = await Promise.all(orders.map(async (order) => {
-      // Ensure order is a Mongoose document for proper population
-      const orderDoc = order.toObject ? order.toObject() : order;
-      
-      // If serviceProvider or supplier are ObjectIds, populate them manually
+      // Handle serviceProvider - check if populated or needs manual fetch
       let serviceProviderData = null;
-      let supplierData = null;
-      
       if (order.serviceProvider) {
         if (typeof order.serviceProvider === 'object' && order.serviceProvider.name) {
           // Already populated
           serviceProviderData = {
-            name: order.serviceProvider.name,
+            name: order.serviceProvider.name || '',
             company: order.serviceProvider.company || '',
             email: order.serviceProvider.email || ''
           };
-        } else {
-          // Need to populate manually
+        } else if (order.serviceProvider.toString) {
+          // Not populated, fetch manually
           try {
-            const spId = order.serviceProvider.toString ? order.serviceProvider.toString() : order.serviceProvider;
+            const spId = order.serviceProvider.toString();
             const sp = await User.findById(spId).select('name company email').lean();
             if (sp) {
               serviceProviderData = {
@@ -407,23 +402,25 @@ const generateAdminData = async () => {
               };
             }
           } catch (err) {
-            console.error(`Error populating serviceProvider for order ${order.orderNumber}:`, err);
+            console.error(`Error populating serviceProvider for order ${order.orderNumber}:`, err.message);
           }
         }
       }
       
+      // Handle supplier - check if populated or needs manual fetch
+      let supplierData = null;
       if (order.supplier) {
         if (typeof order.supplier === 'object' && order.supplier.name) {
           // Already populated
           supplierData = {
-            name: order.supplier.name,
+            name: order.supplier.name || '',
             company: order.supplier.company || '',
             email: order.supplier.email || ''
           };
-        } else {
-          // Need to populate manually
+        } else if (order.supplier.toString) {
+          // Not populated, fetch manually
           try {
-            const supId = order.supplier.toString ? order.supplier.toString() : order.supplier;
+            const supId = order.supplier.toString();
             const sup = await User.findById(supId).select('name company email').lean();
             if (sup) {
               supplierData = {
@@ -433,7 +430,7 @@ const generateAdminData = async () => {
               };
             }
           } catch (err) {
-            console.error(`Error populating supplier for order ${order.orderNumber}:`, err);
+            console.error(`Error populating supplier for order ${order.orderNumber}:`, err.message);
           }
         }
       }
@@ -441,13 +438,9 @@ const generateAdminData = async () => {
       const itemCount = order.items ? order.items.length : 0;
       const productNames = order.items && order.items.length > 0
         ? order.items.slice(0, 3).map(item => {
-            // Try to get product name if populated, otherwise use generic
-            if (item.product && typeof item.product === 'object') {
-              return item.product.name || 'Product';
-            }
-            // If product is an ObjectId, try to fetch it
-            if (item.product && item.product.toString) {
-              return 'Product'; // Will be handled below if needed
+            // Try to get product name if populated
+            if (item.product && typeof item.product === 'object' && item.product.name) {
+              return item.product.name;
             }
             return 'Product';
           }).join(', ') + (itemCount > 3 ? ` +${itemCount - 3} more` : '')
@@ -471,7 +464,7 @@ const generateAdminData = async () => {
         products: productNames,
         productCount: itemCount,
         items: order.items?.map(item => ({
-          product: item.product?.name || (item.product && typeof item.product === 'object' ? 'Product' : 'Product'),
+          product: (item.product && typeof item.product === 'object' && item.product.name) ? item.product.name : 'Product',
           quantity: item.quantity || 0,
           unitPrice: item.unitPrice || 0,
           totalPrice: item.totalPrice || 0
