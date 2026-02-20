@@ -849,12 +849,36 @@ router.get('/products/all', authenticateToken, isAdmin, async (req, res) => {
   try {
     const { status } = req.query;
     
+    // Log database connection status
+    const dbState = mongoose.connection.readyState;
+    const dbStates = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+    console.log(`📊 Database connection state: ${dbStates[dbState]} (${dbState})`);
+    console.log(`📊 Database name: ${mongoose.connection.name}`);
+    console.log(`📊 Database host: ${mongoose.connection.host}`);
+    
     // First, get ALL products (simple query - no filtering)
+    console.log('🔍 Querying Product collection...');
     const allProducts = await Product.find()
       .populate('supplier', 'name email company')
       .sort({ createdAt: -1 });
     
     console.log(`📦 Found ${allProducts.length} total products in database`);
+    
+    // Log sample products for debugging
+    if (allProducts.length > 0) {
+      console.log('📦 Sample products:', allProducts.slice(0, 3).map(p => ({
+        id: p._id,
+        name: p.name,
+        status: p.status,
+        supplier: p.supplier?.name || 'No supplier'
+      })));
+    } else {
+      console.log('⚠️ No products found in database!');
+      console.log('⚠️ This could mean:');
+      console.log('   1. Products haven\'t been added to production database');
+      console.log('   2. Database connection is pointing to wrong database');
+      console.log('   3. Products collection is empty');
+    }
     
     // Filter by status in JavaScript (more reliable)
     let products = allProducts;
@@ -882,17 +906,20 @@ router.get('/products/all', authenticateToken, isAdmin, async (req, res) => {
         const s = p.status || 'null/undefined';
         statusCounts[s] = (statusCounts[s] || 0) + 1;
       });
-      console.log('Product status breakdown:', statusCounts);
+      console.log('📊 Product status breakdown:', statusCounts);
     }
     
     res.json({ 
       status: 'success',
       products: products || [],
-      count: products ? products.length : 0
+      count: products ? products.length : 0,
+      totalInDatabase: allProducts.length,
+      database: mongoose.connection.name,
+      dbState: dbStates[dbState]
     });
   } catch (error) {
-    console.error('Get all products error:', error);
-    console.error('Error details:', {
+    console.error('❌ Get all products error:', error);
+    console.error('❌ Error details:', {
       name: error.name,
       message: error.message,
       stack: error.stack
@@ -904,7 +931,9 @@ router.get('/products/all', authenticateToken, isAdmin, async (req, res) => {
       message: 'Internal server error',
       error: error.message,
       products: [],
-      count: 0
+      count: 0,
+      database: mongoose.connection.name,
+      dbState: mongoose.connection.readyState
     });
   }
 });
