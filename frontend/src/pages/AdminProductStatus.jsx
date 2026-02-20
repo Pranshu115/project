@@ -69,15 +69,15 @@ const AdminProductStatus = ({ user }) => {
         return;
       }
 
-      // Build URL with status filter
-      const url = new URL('/api/admin/products/all', window.location.origin);
+      // Build URL with status filter using getApiUrl
+      let apiUrl = getApiUrl('/api/admin/products/all');
       if (statusFilter && statusFilter !== 'all') {
-        url.searchParams.set('status', statusFilter);
+        apiUrl += `?status=${encodeURIComponent(statusFilter)}`;
       }
       
-      console.log('Fetching products from:', url.toString());
+      console.log('Fetching products from:', apiUrl);
       
-      const response = await fetch(url.toString(), {
+      const response = await fetch(apiUrl, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
