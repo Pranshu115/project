@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 import './CreatePO.css';
 
 const CreatePO = ({ selectedVendors, substitutions, boqId, items }) => {
@@ -40,7 +41,7 @@ const CreatePO = ({ selectedVendors, substitutions, boqId, items }) => {
         substitutionsCount: substitutions?.length
       });
 
-      const res = await fetch('/api/po/group', {
+      const res = await fetch(getApiUrl('/api/po/group'), {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -104,7 +105,7 @@ const CreatePO = ({ selectedVendors, substitutions, boqId, items }) => {
     try {
       console.log('Creating POs with groups:', poGroups);
       
-      const res = await fetch('/api/po/create', {
+      const res = await fetch(getApiUrl('/api/po/create'), {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

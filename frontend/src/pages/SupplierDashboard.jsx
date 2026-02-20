@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../config/api';
 import { 
   Package,
   TrendingUp,
@@ -72,7 +73,7 @@ const SupplierDashboard = ({ user }) => {
   const checkSetupStatus = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/setup-status', {
+      const response = await fetch(getApiUrl('/api/supplier/setup-status'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -89,7 +90,7 @@ const SupplierDashboard = ({ user }) => {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/dashboard/supplier', {
+      const response = await fetch(getApiUrl('/api/dashboard/supplier'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -146,7 +147,7 @@ const SupplierDashboard = ({ user }) => {
       const token = localStorage.getItem('token');
       // Encode the orderId to handle special characters
       const encodedOrderId = encodeURIComponent(orderId);
-      const response = await fetch(`/api/supplier/orders/${encodedOrderId}`, {
+      const response = await fetch(getApiUrl(`/api/supplier/orders/${encodedOrderId}`), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -209,7 +210,7 @@ const SupplierDashboard = ({ user }) => {
     try {
       const token = localStorage.getItem('token');
       const encodedOrderId = encodeURIComponent(orderNumber);
-      const response = await fetch(`/api/dashboard/supplier/orders/${encodedOrderId}`, {
+      const response = await fetch(getApiUrl(`/api/dashboard/supplier/orders/${encodedOrderId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -246,7 +247,7 @@ const SupplierDashboard = ({ user }) => {
       const token = localStorage.getItem('token');
       // Encode the orderId to handle special characters
       const encodedOrderId = encodeURIComponent(selectedOrder);
-      const response = await fetch(`/api/supplier/orders/${encodedOrderId}/status`, {
+      const response = await fetch(getApiUrl(`/api/supplier/orders/${encodedOrderId}/status`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +283,7 @@ const SupplierDashboard = ({ user }) => {
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/notifications', {
+      const response = await fetch(getApiUrl('/api/supplier/notifications'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -312,7 +313,7 @@ const SupplierDashboard = ({ user }) => {
   const markNotificationAsRead = async (notificationId) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`/api/supplier/notifications/${notificationId}/read`, {
+        await fetch(getApiUrl(`/api/supplier/notifications/${notificationId}/read`), {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -437,7 +438,7 @@ const SupplierDashboard = ({ user }) => {
                     onClick={async () => {
                       try {
                         const token = localStorage.getItem('token');
-                        await fetch('/api/supplier/notifications/read-all', {
+                        await fetch(getApiUrl('/api/supplier/notifications/read-all'), {
                           method: 'PATCH',
                           headers: {
                             'Authorization': `Bearer ${token}`

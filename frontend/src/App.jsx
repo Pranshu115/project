@@ -83,7 +83,8 @@ function App() {
 
   const checkSupplierSetupStatus = async (token) => {
     try {
-      const response = await fetch('/api/supplier/setup-status', {
+      const { getApiUrl } = await import('./config/api');
+      const response = await fetch(getApiUrl('/api/supplier/setup-status'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }

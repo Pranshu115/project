@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-// API Base URL - using deployed backend
-const API_BASE_URL = 'https://tatvadirect.onrender.com';
+// API Base URL - uses environment variable in production, falls back to hardcoded URL
+// In Vercel, set VITE_API_BASE_URL environment variable to your Render backend URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://tatvadirect.onrender.com';
 
 // Create axios instance with default config
 const api = axios.create({

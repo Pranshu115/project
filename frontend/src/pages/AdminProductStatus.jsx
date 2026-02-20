@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 import { 
   Package, 
   CheckCircle, 
@@ -781,7 +782,7 @@ const ProductDetailModal = ({ product, onClose, onApprove, onReject, onDelete, o
     setEnhancing(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/products/ai-enhance', {
+      const response = await fetch(getApiUrl('/api/admin/products/ai-enhance'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

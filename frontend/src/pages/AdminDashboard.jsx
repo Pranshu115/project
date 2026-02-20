@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 import { useLocation } from 'react-router-dom';
 import { 
   Users, 
@@ -114,7 +115,7 @@ const AdminDashboard = ({ user }) => {
         return;
       }
       
-      const response = await fetch('/api/admin/products/pending', {
+      const response = await fetch(getApiUrl('/api/admin/products/pending'), {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -190,7 +191,7 @@ const AdminDashboard = ({ user }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/dashboard', {
+      const response = await fetch(getApiUrl('/api/admin/dashboard'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -780,7 +781,7 @@ const ProductDetailModal = ({ product, supplier, onClose, onUpdate }) => {
     setEnhancing(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/products/ai-enhance', {
+      const response = await fetch(getApiUrl('/api/admin/products/ai-enhance'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2248,7 +2249,7 @@ const PendingProductsTab = ({ pendingProducts, onProductClick, onRefresh }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/products/approve-all', {
+      const response = await fetch(getApiUrl('/api/admin/products/approve-all'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -2282,7 +2283,7 @@ const PendingProductsTab = ({ pendingProducts, onProductClick, onRefresh }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/products/status-check', {
+      const response = await fetch(getApiUrl('/api/admin/products/status-check'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }

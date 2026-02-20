@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, LogIn } from 'lucide-react';
 import tatvaLogo from '../images/tatva_d.png';
+import { getApiUrl } from '../config/api';
 import './Auth.css';
 
 const Login = ({ onLogin }) => {
@@ -28,7 +29,7 @@ const Login = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

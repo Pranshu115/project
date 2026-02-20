@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getApiUrl } from '../config/api';
 import { 
   FileText, 
   Users, 
@@ -59,7 +60,7 @@ const ServiceProviderDashboard = ({ user }) => {
       const token = localStorage.getItem('token');
       // Add cache-busting parameters to ensure fresh data
       const timestamp = Date.now();
-      const response = await fetch(`/api/dashboard/service-provider?_t=${timestamp}`, {
+      const response = await fetch(`${getApiUrl('/api/dashboard/service-provider')}?_t=${timestamp}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -100,7 +101,7 @@ const ServiceProviderDashboard = ({ user }) => {
       const encodedOrderId = encodeURIComponent(orderId);
       // Add cache-busting parameters to ensure fresh supplier data
       const timestamp = Date.now();
-      const response = await fetch(`/api/dashboard/service-provider/orders/${encodedOrderId}?_t=${timestamp}`, {
+      const response = await fetch(`${getApiUrl(`/api/dashboard/service-provider/orders/${encodedOrderId}`)}?_t=${timestamp}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -189,7 +190,7 @@ const ServiceProviderDashboard = ({ user }) => {
     try {
       const token = localStorage.getItem('token');
       const encodedOrderId = encodeURIComponent(orderNumber);
-      const response = await fetch(`/api/dashboard/service-provider/orders/${encodedOrderId}`, {
+      const response = await fetch(getApiUrl(`/api/dashboard/service-provider/orders/${encodedOrderId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -228,7 +229,7 @@ const ServiceProviderDashboard = ({ user }) => {
     try {
       const token = localStorage.getItem('token');
       const encodedOrderId = encodeURIComponent(selectedOrder);
-      const response = await fetch(`/api/dashboard/service-provider/orders/${encodedOrderId}/payment`, {
+      const response = await fetch(getApiUrl(`/api/dashboard/service-provider/orders/${encodedOrderId}/payment`), {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -273,7 +274,7 @@ const ServiceProviderDashboard = ({ user }) => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/boq/${boqId}`, {
+      const response = await fetch(getApiUrl(`/api/boq/${boqId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

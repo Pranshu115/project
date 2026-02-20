@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrendingUp, Clock, RefreshCw } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 import './VendorSelect.css';
 
 const VendorSelect = ({ items = [], onComplete }) => {
@@ -29,7 +30,7 @@ const VendorSelect = ({ items = [], onComplete }) => {
       console.log('Items being sent:', items);
       
       // Add timestamp and random to prevent caching and ensure fresh data
-      const res = await fetch(`/api/vendors/rank?_t=${timestamp}&_r=${random}`, {
+      const res = await fetch(`${getApiUrl('/api/vendors/rank')}?_t=${timestamp}&_r=${random}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

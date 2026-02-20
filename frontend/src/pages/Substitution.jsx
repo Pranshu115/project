@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X } from 'lucide-react';
+import { getApiUrl } from '../config/api';
 import './Substitution.css';
 
 const Substitution = ({ selectedVendors, onComplete, items }) => {
@@ -18,7 +19,7 @@ const Substitution = ({ selectedVendors, onComplete, items }) => {
     const token = localStorage.getItem('token');
     
     try {
-      const res = await fetch('/api/substitutions/suggest', {
+      const res = await fetch(getApiUrl('/api/substitutions/suggest'), {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

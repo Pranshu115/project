@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { getApiUrl } from '../config/api';
 import { Upload, CheckCircle, AlertCircle, Users, Package, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './BOQNormalize.css';

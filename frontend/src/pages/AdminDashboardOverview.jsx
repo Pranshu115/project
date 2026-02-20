@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 import { 
   Users, 
   Building, 
@@ -32,7 +33,7 @@ const AdminDashboardOverview = ({ user }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/dashboard', {
+      const response = await fetch(getApiUrl('/api/admin/dashboard'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }

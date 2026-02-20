@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getApiUrl } from '../config/api';
 import { 
   Package,
   DollarSign,

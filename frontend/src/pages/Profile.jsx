@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 import { User, Building, MapPin, Phone, Mail, FileText, Plus, Edit, Save, X } from 'lucide-react';
 import './Profile.css';
 
@@ -14,7 +15,7 @@ const Profile = ({ user }) => {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/profile', {
+      const response = await fetch(getApiUrl('/api/profile'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -31,7 +32,7 @@ const Profile = ({ user }) => {
   const handleSave = async () => {
     try {
       const token = localStorage.getItem('token');
-      await fetch('/api/profile', {
+      await fetch(getApiUrl('/api/profile'), {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiUrl } from '../config/api';
 import { useNavigate } from 'react-router-dom';
 import { Package, MapPin, Box, Save, ArrowRight } from 'lucide-react';
 import tatvaLogo from '../images/tatva_d.png';
@@ -41,7 +42,7 @@ const SupplierProductSetup = ({ user }) => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/products', {
+      const response = await fetch(getApiUrl('/api/supplier/products'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getApiUrl } from '../config/api';
 import { 
   Package, 
   Plus, 
@@ -46,7 +47,7 @@ const ProductManagement = ({ user }) => {
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/notifications', {
+      const response = await fetch(getApiUrl('/api/supplier/notifications'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -64,7 +65,7 @@ const ProductManagement = ({ user }) => {
     try {
       const token = localStorage.getItem('token');
       // Fetch categories from the Category collection
-      const response = await fetch('/api/supplier/categories', {
+      const response = await fetch(getApiUrl('/api/supplier/categories'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -120,7 +121,7 @@ const ProductManagement = ({ user }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/products', {
+      const response = await fetch(getApiUrl('/api/supplier/products'), {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -145,7 +146,7 @@ const ProductManagement = ({ user }) => {
   const handleAddProduct = async (productData) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/products', {
+      const response = await fetch(getApiUrl('/api/supplier/products'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -877,7 +878,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/categories', {
+      const response = await fetch(getApiUrl('/api/supplier/categories'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -894,7 +895,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
   const fetchUnits = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/units', {
+      const response = await fetch(getApiUrl('/api/supplier/units'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -1093,7 +1094,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/categories', {
+      const response = await fetch(getApiUrl('/api/supplier/categories'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1144,7 +1145,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/units', {
+      const response = await fetch(getApiUrl('/api/supplier/units'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1179,7 +1180,7 @@ const ProductModal = ({ product, onClose, onSave }) => {
     setExtracting(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/supplier/products/extract-specifications', {
+      const response = await fetch(getApiUrl('/api/supplier/products/extract-specifications'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { getApiUrl } from '../config/api';
 import { Bell, X, Package, Eye, Check } from 'lucide-react';
 import './AdminNotifications.css';
 
@@ -40,7 +41,7 @@ const AdminNotifications = ({ onProductClick }) => {
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/admin/notifications?limit=20', {
+      const response = await fetch(getApiUrl('/api/admin/notifications?limit=20'), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -137,7 +138,7 @@ const AdminNotifications = ({ onProductClick }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await fetch('/api/admin/notifications/read-all', {
+      await fetch(getApiUrl('/api/admin/notifications/read-all'), {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`
