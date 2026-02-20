@@ -11,7 +11,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        value: mongodb+srv://Harsh:Harsh@cluster0.z0qugmf.mongodb.net/tatvaops?retryWrites=true&w=majority&appName=Cluster0
+        value: mongodb+srv://Harsh:Harsh@cluster0.z0qugmf.mongodb.net/tatvaops?retryWrites=true&w=majority&ssl=true
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN

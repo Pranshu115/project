@@ -5,7 +5,7 @@
 **Production Database (Render):**
 - Database: `tatvaops`
 - Cluster: `cluster0.z0qugmf.mongodb.net`
-- Connection String: `mongodb+srv://Harsh:Harsh@cluster0.z0qugmf.mongodb.net/tatvaops?retryWrites=true&w=majority&appName=Cluster0`
+- Connection String: `mongodb+srv://Harsh:Harsh@cluster0.z0qugmf.mongodb.net/tatvaops?retryWrites=true&w=majority&ssl=true`
 
 ## Steps to Sync Local and Production Databases
 
@@ -16,7 +16,7 @@
 3. Replace it with the production MongoDB URI:
 
 ```env
-MONGODB_URI=mongodb+srv://Harsh:Harsh@cluster0.z0qugmf.mongodb.net/tatvaops?retryWrites=true&w=majority&appName=Cluster0
+MONGODB_URI=mongodb+srv://Harsh:Harsh@cluster0.z0qugmf.mongodb.net/tatvaops?retryWrites=true&w=majority&ssl=true
 ```
 
 **Important:** 
