@@ -19,9 +19,9 @@ Go to Render Dashboard → Your Backend Service → Environment:
 
 2. **Add ALLOWED_ORIGINS** (if not already set):
    ```
-   https://project-frontend-rikh1nvv7-pranshus-projects-2ecfd5c2.vercel.app,https://*.vercel.app
+   https://project-frontend-git-main-pranshus-projects-2ecfd5c2.vercel.app,https://*.vercel.app
    ```
-   Or use your actual Vercel frontend URL.
+   This is your actual Vercel frontend URL.
 
 ### Step 2: Verify Vercel Frontend Environment Variable
 
